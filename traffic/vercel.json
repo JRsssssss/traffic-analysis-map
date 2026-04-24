@@ -1,6 +1,6 @@
 {
   "functions": {
-    "app/server.ts": {
+    "/server.ts": {
       "runtime": "nodejs24.x"
     }
   },
