@@ -8,7 +8,7 @@ import {tanstackRouter} from '@tanstack/router-plugin/vite'
 const config = defineConfig({
   resolve: { tsconfigPaths: true },
   plugins: [tailwindcss(), tanstackRouter(), viteReact()],
-  base: process.env.VITE_BASE_PATH || "traffic-analysis-map",
+  base: process.env.VITE_BASE_PATH || "/traffic-analysis-map",
 })
 
 export default config
