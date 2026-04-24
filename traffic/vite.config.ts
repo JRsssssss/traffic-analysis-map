@@ -3,11 +3,11 @@ import { defineConfig } from 'vite'
 
 import viteReact from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
-import {tanstackRouter} from '@tanstack/router-plugin/vite'
+import { tanstackStart } from '@tanstack/react-start/plugin/vite'
 
 const config = defineConfig({
   resolve: { tsconfigPaths: true },
-  plugins: [tailwindcss(), tanstackRouter(), viteReact()],
+  plugins: [tailwindcss(), tanstackStart(), viteReact()],
   base: '/',
 })
 
