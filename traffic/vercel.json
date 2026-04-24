@@ -1,7 +1,7 @@
 {
   "functions": {
     "app/server.ts": {
-      "runtime": "nodejs18.x"
+      "runtime": "nodejs24.x"
     }
   },
   "routes": [
