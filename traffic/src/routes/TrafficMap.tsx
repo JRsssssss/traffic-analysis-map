@@ -1,8 +1,8 @@
-import { MapContainer, TileLayer, Marker, Popup,  } from 'react-leaflet';
-import { map, type LatLngTuple } from 'leaflet';
 import { useQuery } from '@tanstack/react-query';
 import { Gauge, Users, Clock, MapPin } from 'lucide-react';
 import 'leaflet/dist/leaflet.css';
+import { lazy, Suspense, useState, useEffect } from 'react';
+const LazyMap = lazy(() => import('../components/Map'));
 
 interface TrafficData {
   speed: number;
@@ -11,7 +11,7 @@ interface TrafficData {
   density: number;
 }
 
-const INTERSECTION_POS: LatLngTuple = [13.747549261976209, 100.5237845392636];
+const INTERSECTION_POS: [number, number] = [13.747549261976209, 100.5237845392636];
 
 import { createFileRoute } from '@tanstack/react-router'
 
@@ -46,23 +46,7 @@ function TrafficDashboard() {
     <div className="flex flex-col md:flex-row h-screen w-full bg-slate-50 p-4 gap-4">
       
       <div className="flex-1 rounded-xl overflow-hidden shadow-lg border-2 border-white">
-        <MapContainer 
-          center={INTERSECTION_POS} 
-          zoom={17} 
-          style={{ height: '100%', width: '100%' }}
-        >
-          <TileLayer 
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" 
-          />
-          
-          <Marker position={INTERSECTION_POS}>
-            <Popup>
-              <strong>Charoen Phon Intersection</strong> <br />
-              Lotus's Rama 1 Area
-            </Popup>
-          </Marker>
-        </MapContainer>
+        <LazyMap pos={INTERSECTION_POS} />
       </div>
 
       <div className="w-full md:w-80 flex flex-col gap-4">
@@ -98,5 +82,3 @@ function TrafficDashboard() {
     </div>
   );
 };
-
-export default TrafficDashboard;
