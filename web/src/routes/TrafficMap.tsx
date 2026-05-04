@@ -1,5 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
-import { Gauge, Users, Clock, MapPin } from "lucide-react";
+import {
+  Gauge,
+  Users,
+  Clock,
+  MapPin,
+  Motorbike,
+  Car,
+  Truck,
+  Bus,
+} from "lucide-react";
 import "leaflet/dist/leaflet.css";
 import { lazy, Suspense, useState, useEffect } from "react";
 const LazyMap = lazy(() => import("../components/Map"));
@@ -24,6 +33,7 @@ interface TrafficData {
   vc_ratio: number;
   los_data: LOSData;
   cumulative_counts: cumulativeData;
+  frame?: string;
 }
 
 const INTERSECTION_POS: [number, number] = [
@@ -48,7 +58,6 @@ function TrafficDashboard() {
     };
 
     ws.onmessage = (event) => {
-      console.log(event.data);
       const trafficData = JSON.parse(event.data) as TrafficData;
       setData(trafficData);
     };
@@ -85,7 +94,11 @@ function TrafficDashboard() {
   return (
     <div className="flex flex-col md:flex-row h-screen w-full bg-slate-50 p-4 gap-4">
       <div className="flex-1 rounded-xl overflow-hidden shadow-lg border-2 border-white">
-        <LazyMap pos={INTERSECTION_POS} />
+        <LazyMap
+          pos={INTERSECTION_POS}
+          trafficColor={data?.los_data.color}
+          frame={data?.frame}
+        />
       </div>
 
       <div className="w-full md:w-80 flex flex-col gap-4">
@@ -125,7 +138,7 @@ function TrafficDashboard() {
 
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <Clock className="text-purple-500" />
+                <Gauge className="text-purple-500" />
                 <span className="text-slate-600 font-medium">LOS</span>
               </div>
               <span className="font-semibold">{data?.los_data.grade}</span>
@@ -145,7 +158,7 @@ function TrafficDashboard() {
 
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <Clock className="text-purple-500" />
+                <Motorbike className="text-purple-500" />
                 <span className="text-slate-600 font-medium">Motorcycle</span>
               </div>
               <span className="font-semibold">
@@ -155,7 +168,7 @@ function TrafficDashboard() {
 
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <Clock className="text-purple-500" />
+                <Car className="text-purple-500" />
                 <span className="text-slate-600 font-medium">Car</span>
               </div>
               <span className="font-semibold">
@@ -175,7 +188,7 @@ function TrafficDashboard() {
 
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <Clock className="text-purple-500" />
+                <Truck className="text-purple-500" />
                 <span className="text-slate-600 font-medium">Truck</span>
               </div>
               <span className="font-semibold">
@@ -185,7 +198,7 @@ function TrafficDashboard() {
 
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <Clock className="text-purple-500" />
+                <Bus className="text-purple-500" />
                 <span className="text-slate-600 font-medium">Bus</span>
               </div>
               <span className="font-semibold">

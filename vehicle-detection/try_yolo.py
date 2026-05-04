@@ -4,14 +4,10 @@ from ultralytics import YOLO
 import time
 
 # 1. โหลดโมเดล
-model = YOLO(
-    r"D:\projects\traffic-analysis-map\vehicle-detection\train2\weights\best.pt"
-)
+model = YOLO("api/model/best.pt")
 
 # 2. เปิดไฟล์วิดีโอ
-cap = cv2.VideoCapture(
-    r"D:\projects\traffic-analysis-map\vehicle-detection\Video Project 2.mp4"
-)
+cap = cv2.VideoCapture("api/data/video.mp4")
 
 # --- ตั้งค่าทางวิศวกรรมจราจร (สมมติตามแยกเจริญผล) ---
 pcu_map = {"Bus": 2.1, "cars": 1.0, "motorcycle": 0.33, "tuktuk": 0.8, "truck": 2.0}

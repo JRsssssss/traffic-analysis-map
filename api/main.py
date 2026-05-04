@@ -1,7 +1,7 @@
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 import json
 import asyncio
-from yoloModel import get_live_data
+from api.yoloModel import get_live_data
 
 app = FastAPI()
 

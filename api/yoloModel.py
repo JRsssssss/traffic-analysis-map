@@ -2,16 +2,13 @@ import cv2
 import numpy as np
 from ultralytics import YOLO
 import time
+import base64
 
 # 1. โหลดโมเดล
-model = YOLO(
-    r"D:\projects\traffic-analysis-map\vehicle-detection\result\train2\weights\best.pt"
-)
+model = YOLO("api/model/best.pt")
 
 # 2. เปิดไฟล์วิดีโอ
-cap = cv2.VideoCapture(
-    r"D:\projects\traffic-analysis-map\vehicle-detection\data\video.mp4"
-)
+cap = cv2.VideoCapture("api/data/video.mp4")
 
 # --- ตั้งค่าทางวิศวกรรมจราจร (สมมติตามแยกเจริญผล) ---
 pcu_map = {"bus": 2.1, "car": 1.0, "motorcycle": 0.33, "tuktuk": 0.8, "truck": 2.0}
@@ -80,8 +77,8 @@ def get_live_data():
             continue
         frame = cv2.resize(frame, (640, 360))
 
-        if len(line_points) == 2:
-            cv2.line(frame, line_points[0], line_points[1], (255, 255, 255), 2)
+        # if len(line_points) == 2:
+        # cv2.line(frame, line_points[0], line_points[1], (255, 255, 255), 2)
 
         results = model.track(
             frame, persist=True, tracker="bytetrack.yaml", conf=0.5, verbose=False
@@ -110,8 +107,8 @@ def get_live_data():
                     # บวกค่า PCU รวม
                     total_pcu += pcu_map.get(class_name, 1.0)
 
-                color = color_map.get(class_name, (255, 255, 255))
-                cv2.rectangle(frame, (x1, y1), (x2, y2), color, 2)
+                # color = color_map.get(class_name, (255, 255, 255))
+                # cv2.rectangle(frame, (x1, y1), (x2, y2), color, 2)
 
         # --- ส่วนการคำนวณและแสดงผล Engineering Metrics ---
         # คำนวณ Flow Rate (V) รายชั่วโมง
@@ -120,6 +117,11 @@ def get_live_data():
         current_flow = (total_pcu / (elapsed_time / 3600)) if elapsed_time > 0 else 0
         vc_ratio = current_flow / Capacity if Capacity > 0 else 0
         los_grade, los_color = get_los(vc_ratio)
+
+        # encode frame to base64 for the frontend
+        ret, buffer = cv2.imencode(".jpg", frame)
+        frame_b64 = base64.b64encode(buffer).decode("utf-8")
+
         yield {
             "current_flow": current_flow,
             "sat_flow": S_base,
@@ -130,4 +132,5 @@ def get_live_data():
             },
             "cumulative_counts": cumulative_counts,
             "vc_ratio": vc_ratio,
+            "frame": frame_b64,
         }
